@@ -12,6 +12,7 @@ class Game extends React.Component {
       history: [
         {
           squares: [null, null, null, null, null, null, null, null, null],
+          lastMove: null
         },
       ],
       stepNumber: 1,
@@ -82,12 +83,43 @@ class Game extends React.Component {
       history: history.concat([
         {
           squares: squares,
+          lastMove: i,
         },
       ]),
       stepNumber: history.length + 1,
       isXNext: !this.state.isXNext,
       winner: winner,
     });
+  }
+
+  getLastMoveDescription(historyItem) {
+    if (historyItem.lastMove === null) {
+      return null;
+    }
+
+    let column, row = 0;
+
+    switch (historyItem.lastMove % 3) {
+      case 0:
+        column = 1;
+        break;
+      case 1:
+        column = 2;
+        break;
+      case 2:
+        column = 3;
+        break;
+    }
+
+    if (historyItem.lastMove < 3) {
+      row = 1;
+    } else if (historyItem.lastMove < 6) {
+      row = 2;
+    } else {
+      row = 3;
+    }
+
+    return `(${column}, ${row})`;
   }
 
   render() {
@@ -114,12 +146,13 @@ class Game extends React.Component {
           <div className="game-info">
             <div>{status}</div>
             <ol>
-              {this.state.history.map((_, index) => {
+              {this.state.history.map((item, index) => {
                 return (
                   <li key={index}>
                     <button onClick={() => this.jumpTo(index + 1)}>
                       {this.getDescription(index)}
                     </button>
+                    <span>{this.getLastMoveDescription(item)}</span>
                   </li>
                 );
               })}
