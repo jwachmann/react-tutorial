@@ -15,6 +15,7 @@ class Game extends React.Component {
           lastMove: null
         },
       ],
+      selected: null,
       stepNumber: 1,
       isXNext: true,
       winner: null,
@@ -61,6 +62,7 @@ class Game extends React.Component {
 
     this.setState({
       stepNumber: step,
+      selected: current.lastMove,
       isXNext: (step % 2) === 1,
       winner: winner,
     })
@@ -71,6 +73,9 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber - 1];
 
     if (this.state.winner || current.squares[i] !== null) {
+      this.setState({
+        selected: i,
+      });
       return;
     }
 
@@ -86,6 +91,7 @@ class Game extends React.Component {
           lastMove: i,
         },
       ]),
+      selected: i,
       stepNumber: history.length + 1,
       isXNext: !this.state.isXNext,
       winner: winner,
@@ -138,6 +144,7 @@ class Game extends React.Component {
               squares={
                 this.state.history[this.state.stepNumber - 1].squares
               }
+              selected={this.state.selected}
               isXNext={this.state.isXNext}
               winner={this.state.winner}
               onClick={(i) => this.handleClick(i)}
@@ -152,7 +159,9 @@ class Game extends React.Component {
                     <button onClick={() => this.jumpTo(index + 1)}>
                       {this.getDescription(index)}
                     </button>
-                    <span>{this.getLastMoveDescription(item)}</span>
+                    <span className={this.state.stepNumber === index + 1 ? "step-number selected" : "step-number"}>
+                      {this.getLastMoveDescription(item)}
+                    </span>
                   </li>
                 );
               })}

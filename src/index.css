@@ -18,6 +18,10 @@ ul {
   margin-bottom: 10px;
 }
 
+.step-number.selected {
+  font-weight: bold;
+}
+
 .square {
   background: #fff;
   border: 1px solid #999;
@@ -31,6 +35,10 @@ ul {
   padding: 0;
   text-align: center;
   width: 34px;
+}
+
+.square.selected {
+  background: tan;
 }
 
 .square:focus {
