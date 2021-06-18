@@ -128,15 +128,43 @@ class Game extends React.Component {
     return `(${column}, ${row})`;
   }
 
+  callServer() {
+    const promise = new Promise((resolve, reject) => {
+      const request = fetch("http://localhost:8000")
+      request.then(response => response.text())
+        .then(text => resolve(text))
+        .catch(reason => reject(reason));
+    });
+    
+    return promise;
+  }
+
+  getServerResponse() {
+    const promise = this.callServer();
+    promise.then(content => {
+      this.setState({serverMessage: content});
+    })
+    .catch(error => {
+      this.setState({serverMessage: `Server call failed: ${error}`});
+    });
+  }
+
   render() {
     const status =
       this.state.winner === null
         ? "Next player: " + this.getNextPlayer()
         : "Winner: " + this.state.winner;
 
+    const greeting =
+      this.state.serverMessage
+        ? <div>{this.state.serverMessage}</div>
+        : null;
+
     return (
       <div>
         <h1>Hello World!</h1>
+        <button onClick={() => this.getServerResponse()}>Click me to call the server</button>
+        {greeting}
 
         <div className="game">
           <div className="game-board">
